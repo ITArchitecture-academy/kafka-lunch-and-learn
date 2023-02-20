@@ -10,6 +10,7 @@ buildscript {
 plugins {
     id "java"
     id "idea"
+    id 'application'
 }
 
 sourceCompatibility = "16"
@@ -37,4 +38,7 @@ idea {
         downloadJavadoc = true
         downloadSources = true
     }
+}
+application {
+    mainClass = 'wind.WindTurbineProducer'
 }

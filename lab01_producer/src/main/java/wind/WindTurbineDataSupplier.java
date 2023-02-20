@@ -8,11 +8,11 @@ import java.util.function.Supplier;
 public class WindTurbineDataSupplier implements Supplier<WindTurbineData> {
 
     private final Random rand = new Random();
-    private final int msgsPerSec;
+    private final double msgsPerSec;
     List<TurbineProperties> turbines = new ArrayList<>();
     private int msgCount = 0;
 
-    public WindTurbineDataSupplier(int numTurbines, int msgsPerSec) {
+    public WindTurbineDataSupplier(int numTurbines, double msgsPerSec) {
         this.msgsPerSec = msgsPerSec;
         for (int i = 0; i < numTurbines; i++) {
             turbines.add(new TurbineProperties(rand.nextDouble(5000, 1.5 * 1000 * 1000),
@@ -28,10 +28,9 @@ public class WindTurbineDataSupplier implements Supplier<WindTurbineData> {
 
         WindTurbineData windTurbineData = new WindTurbineData(turbine.id, turbine.parkId,
                 rand.nextDouble(0, turbine.maxPower));
-
-        if (msgCount >= msgsPerSec && msgsPerSec != -1) {
+        if (msgsPerSec != -1) {
             try {
-                Thread.sleep(1000);
+                Thread.sleep((long) ((1 / msgsPerSec) * 1000));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
