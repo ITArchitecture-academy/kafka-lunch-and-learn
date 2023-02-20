@@ -38,3 +38,6 @@ idea {
         downloadSources = true
     }
 }
+application {
+    mainClass = 'wind.WindTurbineConsumer'
+}
