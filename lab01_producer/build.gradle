@@ -10,7 +10,7 @@ buildscript {
 plugins {
     id "java"
     id "idea"
-    id 'application'
+    id "application"
 }
 
 sourceCompatibility = "16"
