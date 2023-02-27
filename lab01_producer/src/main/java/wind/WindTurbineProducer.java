@@ -1,9 +1,6 @@
 package wind;
 
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.Producer;
-import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.*;
 import org.apache.kafka.common.serialization.StringSerializer;
 
 import java.io.FileReader;
@@ -31,20 +28,26 @@ public class WindTurbineProducer {
         // The WindTurbineDataSupplier creates a Stream of approximately `msgsPerSec` messages per seconds for you to produce
         final Stream<WindTurbineData> windTurbineDataStream = Stream.generate(new WindTurbineDataSupplier(50, msgsPerSec));
 
+        Stats stats = new Stats(5000);
+
         // initialize a producer
         // Please always close the producers. try(var) {} closes it automatically
         try (Producer<String, WindTurbineData> producer = new KafkaProducer<>(props)) {
             windTurbineDataStream.forEach(turbineData -> {
                 String key = turbineData.windTurbineId;
 
+                long sendStartMs = System.currentTimeMillis();
+
                 ProducerRecord<String, WindTurbineData> producerRecord = new ProducerRecord<>(TOPIC, key, turbineData);
 
-
-                producer.send(producerRecord);
+                Callback cb = stats.nextCompletion(sendStartMs, stats);
+                producer.send(producerRecord, cb);
                 if (logInfos) {
                     System.out.println("Produced data for wind turbine " + turbineData.windTurbineId);
                 }
             });
+        } finally {
+            stats.printTotal();
         }
     }
 }
