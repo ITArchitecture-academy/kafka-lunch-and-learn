@@ -1,5 +1,8 @@
 package wind;
 
+import io.confluent.kafka.serializers.KafkaJsonSerializer;
+import io.confluent.kafka.serializers.json.KafkaJsonSchemaSerializer;
+import io.confluent.kafka.serializers.json.KafkaJsonSchemaSerializerConfig;
 import org.apache.kafka.clients.producer.*;
 import org.apache.kafka.common.serialization.StringSerializer;
 
@@ -19,7 +22,15 @@ public class WindTurbineProducer {
         // How to serialize Keys?
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         // How to serialize Values?
-        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, WindTurbineDataSerializer.class);
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaJsonSchemaSerializer.class);
+        // Schema Registry/Karapace URL
+        props.put(KafkaJsonSchemaSerializerConfig.SCHEMA_REGISTRY_URL_CONFIG, "http://127.0.0.1:8081");
+        // Do not register Schemas automatically
+        props.put(KafkaJsonSchemaSerializerConfig.AUTO_REGISTER_SCHEMAS, false);
+        // Fail on invalid schemas
+        props.put(KafkaJsonSchemaSerializerConfig.FAIL_INVALID_SCHEMA, true);
+        // Define which schema ID to use
+        props.put(KafkaJsonSchemaSerializerConfig.USE_SCHEMA_ID, 1);
 
         final String TOPIC = props.getProperty("topic");
         double msgsPerSec = Double.parseDouble(props.getProperty("producer.msgs.per.sec", "1"));

@@ -1,9 +1,20 @@
 package wind;
 
-public class WindTurbineData{
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public class WindTurbineData {
+    @JsonProperty
     public String windTurbineId;
+    @JsonProperty
     public String windParkId;
+    @JsonProperty
     public double currentPower;
+
+    // Jackson needs an empty constructor
+    private WindTurbineData() {
+
+    }
 
     public WindTurbineData(String windTurbineId, String windParkId, double currentPower) {
         this.windTurbineId = windTurbineId;
