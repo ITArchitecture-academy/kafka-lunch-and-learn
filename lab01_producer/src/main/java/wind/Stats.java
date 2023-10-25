@@ -120,6 +120,9 @@ public class Stats {
 
     public void printTotal() {
         long elapsed = System.currentTimeMillis() - start;
+        if(elapsed==0) {
+            elapsed=1; // avoid division by zero
+        }
         double recsPerSec = 1000.0 * count / (double) elapsed;
         double mbPerSec = 1000.0 * this.bytes / (double) elapsed / (1024.0 * 1024.0);
         int[] percs = percentiles(this.latencies, index, 0.5, 0.95, 0.99, 0.999);
