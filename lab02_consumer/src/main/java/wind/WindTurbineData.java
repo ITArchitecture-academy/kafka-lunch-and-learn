@@ -4,11 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class WindTurbineData {
-    @JsonProperty
+    @JsonProperty("wind_turbine_id")
     public String windTurbineId;
-    @JsonProperty
+
+    @JsonProperty("wind_park_id")
     public String windParkId;
-    @JsonProperty
+
+    @JsonProperty("current_power")
     public double currentPower;
 
     // Jackson needs an empty constructor
