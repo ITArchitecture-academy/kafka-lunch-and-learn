@@ -3,14 +3,19 @@ package wind;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.validation.constraints.NotNull;
+
 public class WindTurbineData {
     @JsonProperty("wind_turbine_id")
+    @NotNull
     public String windTurbineId;
 
     @JsonProperty("wind_park_id")
+    @NotNull
     public String windParkId;
 
     @JsonProperty("current_power")
+    @NotNull
     public double currentPower;
 
     // Jackson needs an empty constructor
