@@ -20,18 +20,22 @@ public class WindTurbineConsumer {
         }
         props.load(new FileReader(configFile));
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, KafkaJsonSchemaDeserializer.class);
-        // Schema Registry/Karapace URL
-        props.put(KafkaJsonSchemaDeserializerConfig.SCHEMA_REGISTRY_URL_CONFIG, "http://127.0.0.1:8081");
-        // Do not register Schemas automatically
-        props.put(KafkaJsonSchemaDeserializerConfig.AUTO_REGISTER_SCHEMAS, false);
-        // Fail on invalid schemas
-        props.put(KafkaJsonSchemaDeserializerConfig.FAIL_INVALID_SCHEMA, true);
-        // Define which schema ID to use
-        props.put(KafkaJsonSchemaDeserializerConfig.USE_SCHEMA_ID, 1);
-        // Define which class should be the deserialization target
-        props.put(KafkaJsonSchemaDeserializerConfig.JSON_VALUE_TYPE, WindTurbineData.class);
-        props.put("json.oneof.for.nullables", false);
+        if(props.getOrDefault("enable.schemas", "true") != "true") {
+            props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, WindTurbineDataDeserializer.class);
+        } else {
+            props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, KafkaJsonSchemaDeserializer.class);
+            // Schema Registry/Karapace URL
+            props.put(KafkaJsonSchemaDeserializerConfig.SCHEMA_REGISTRY_URL_CONFIG, "http://127.0.0.1:8081");
+            // Do not register Schemas automatically
+            props.put(KafkaJsonSchemaDeserializerConfig.AUTO_REGISTER_SCHEMAS, false);
+            // Fail on invalid schemas
+            props.put(KafkaJsonSchemaDeserializerConfig.FAIL_INVALID_SCHEMA, true);
+            // Define which schema ID to use
+            props.put(KafkaJsonSchemaDeserializerConfig.USE_SCHEMA_ID, 1);
+            // Define which class should be the deserialization target
+            props.put(KafkaJsonSchemaDeserializerConfig.JSON_VALUE_TYPE, WindTurbineData.class);
+            props.put("json.oneof.for.nullables", false);
+        }
 
 
         final String TOPIC = props.getProperty("topic");
